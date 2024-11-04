@@ -14,20 +14,57 @@ player may play a second inning of infield until every other player has played o
 */
 
 #include <iostream>
+#include <string>
 using namespace std;
+
+const int NUMOFPLAYERS = 12;
+
+int* sortPlayerAverages(int playerAverageArray[], int sortedPlayerAverages[]);
 
 int main() {
 	//declarations
-	const int NUMOFPLAYERS = 12;
-	const int NUMOFINNINGS = 5;
-	const int NUMOFINFIELDPOSITIONS = 6;
-	const int NUMOFOUTFIELDPOSITIONS = 4;
-	
-	
-	int averages[NUMOFPLAYERS];
+	string playerNames[NUMOFPLAYERS];
+	int playerAverages[NUMOFPLAYERS];
+	int sortedPlayerAveragesArray[NUMOFPLAYERS];
 
+	//get user input
+	cout << "Enter 12 player names: " << endl;
+	for (int i = 0; i < NUMOFPLAYERS; i++) {
+		cout << "What is player " << i + 1 << "'s name: ";
+		cin >> playerNames[i];
+	} // Inputs the players' names into playerNames Array
 
+	cout << "\nEnter the averages for each player:" << endl << "-----------------------------------" << endl;
+	for (int i = 0; i < NUMOFPLAYERS; i++) {
+		cout << "What is " << playerNames[i] << "'s average: ";
+		cin >> playerAverages[i];
+	} // Inputs the players' averages into an array playerAverages
 
+	sortPlayerAverages(playerAverages, sortedPlayerAveragesArray);
+
+	for (int i = 0; i < NUMOFPLAYERS; i++) {
+		cout << playerAverages[i] << endl;
+	}
 
 	return 0;
+}
+
+int* sortPlayerAverages(int playerAverageArray[], int sortedPlayerAverages[]) {
+	int currentMaxAverageInIteration;
+
+	for (int i = 0; i < NUMOFPLAYERS; i++) {
+		currentMaxAverageInIteration = playerAverageArray[i];
+
+		for (int j = 1; j < NUMOFPLAYERS; j++) {
+			if (currentMaxAverageInIteration < playerAverageArray[j]) {
+				currentMaxAverageInIteration = playerAverageArray[j];
+				sortedPlayerAverages[i] = playerAverageArray[j];
+				playerAverageArray[j] = currentMaxAverageInIteration;
+			}
+		}
+
+		sortedPlayerAverages[i] = currentMaxAverageInIteration;
+	}
+
+	return sortedPlayerAverages;
 }
