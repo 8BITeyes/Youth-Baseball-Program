@@ -42,6 +42,8 @@ int main() {
 
 	sortPlayerAverages(playerAverages, sortedPlayerAveragesArray);
 
+
+
 	for (int i = 0; i < NUMOFPLAYERS; i++) {
 		cout << playerAverages[i] << endl;
 	}
@@ -50,21 +52,23 @@ int main() {
 }
 
 int* sortPlayerAverages(int playerAverageArray[], int sortedPlayerAverages[]) {
-	int currentMaxAverageInIteration;
+	int lastMaxNum = 1000;
 
 	for (int i = 0; i < NUMOFPLAYERS; i++) {
-		currentMaxAverageInIteration = playerAverageArray[i];
+		int currentMaxNum = 0;
 
-		for (int j = 1; j < NUMOFPLAYERS; j++) {
-			if (currentMaxAverageInIteration < playerAverageArray[j]) {
-				currentMaxAverageInIteration = playerAverageArray[j];
-				sortedPlayerAverages[i] = playerAverageArray[j];
-				playerAverageArray[j] = currentMaxAverageInIteration;
-			}
+		for (int j = 0; j < NUMOFPLAYERS; j++) {
+			if (playerAverageArray[j] > currentMaxNum && playerAverageArray[j] < lastMaxNum)
+				currentMaxNum = playerAverageArray[j];
 		}
 
-		sortedPlayerAverages[i] = currentMaxAverageInIteration;
+		sortedPlayerAverages[i] = currentMaxNum;
+		lastMaxNum = currentMaxNum;
 	}
+
+
+
+
 
 	return sortedPlayerAverages;
 }
