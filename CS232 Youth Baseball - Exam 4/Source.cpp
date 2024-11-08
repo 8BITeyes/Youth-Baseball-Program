@@ -1,18 +1,3 @@
-/* 1. The line-up should include batting order and player’s defensive positions for each of the five innings.
-
-2. Each team shall play all players in the field in defensive positions. Additional players, (short fielders), shall be
-positioned in the outfield no closer than 20 feet to the baseline when the ball is hit and will be considered
-outfielders.
-
-3. Each player must be scheduled to play an infield position at least one (1) inning. Catcher will be considered an
-infield position. A player may only be scheduled to play catcher a maximum of one (1) inning per game. No
-player may play a second inning of infield until every other player has played one inning of infield.
-
-4. A player cannot play the same defensive position for more than one (1) inning per game.
-
-5. A player can only sit out one (1) inning per game.
-*/
-
 #include <iostream>
 #include <string>
 #include <random>
@@ -25,21 +10,22 @@ struct player {
 
 //Constant declarations
 const int NUMOFPLAYERS = 12;
-const int NUMOFINNINGS = 5;
+const int NUMOFCOLUMNS = 6;
 const int MIN = 0;
-const string POSITIONS[NUMOFPLAYERS + 1] = { "P", "C", "1B", "2B", "SS", "3B", "RF", "LF", "RCF", "LCF", "OUT", "OUT"};
+const string POSITIONS[NUMOFPLAYERS] = { "P", "C", "1B", "2B", "SS", "3B", "RF", "LF", "RCF", "LCF", "OUT", "OUT"};
 
 //Function declarations
 player* sortPlayers(player playersArray[], player sortedPlayerAverages[]);
-string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNINGS + 1]);
-bool existsInColumn(int positionOccupiedArray[][NUMOFINNINGS], int rowNum, int randomNum);
+void sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFCOLUMNS]);
+bool existsInColumn(int positionOccupiedArray[][NUMOFCOLUMNS], int rowNum, int randomNum);
+bool existsInRow(int positionOccupiedArray[][NUMOFCOLUMNS], int columnNum, int randomNum);
 //string displayArray(string playersArray);
 
 int main() {
 	//declarations
 	player players[NUMOFPLAYERS];
 	player sortedPlayers[NUMOFPLAYERS];
-	string playerLineup[NUMOFPLAYERS][NUMOFINNINGS + 1];
+	string playerLineup[NUMOFPLAYERS][NUMOFCOLUMNS];
 
 	//get user input
 	cout << "Enter 12 player names: " << endl;
@@ -87,48 +73,64 @@ player* sortPlayers(player playerAverageArray[], player sortedPlayerAverages[]) 
 }
 
 
-string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNINGS + 1]) {
-	srand((unsigned) time(NULL));
+void sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFCOLUMNS]) {
+	srand((unsigned)time(NULL));
 	int column = 0;
 	int row = 0;
-	int occupiedNums[NUMOFPLAYERS][NUMOFINNINGS];
+	int occupiedNums[NUMOFPLAYERS][NUMOFCOLUMNS];
 
 	for (int i = row; i < NUMOFPLAYERS; i++) {
 		playerLineup[i][column] = sortedPlayerArray[i].name;
 	}// Inputs the players names in order into the first column of the lineup (2D array)
 
 
-	for (int i = column + 1; i < NUMOFINNINGS + 1; i++) {
+	for (int i = column + 1; i < NUMOFCOLUMNS; i++) {
 
 		for (int j = row; j < NUMOFPLAYERS; j++) {
-			bool exists;
-			int random = rand() % 12; //random number that will be generated between 0 and 12
+			bool exists = false;
+			int random = rand() % 11; //random number that will be generated between 0 and 11
 
-			exists = existsInColumn(occupiedNums, j, random);
 
-			if (exists == true) {
-				random = rand() % 12;
-				exists = existsInColumn(occupiedNums, j, random);
+			while (existsInColumn(occupiedNums, j, random) == true || existsInRow(occupiedNums, i, random) == true)
+			{
+				exists = true;
+				random = rand() % 11;
 			}
-			else {
+
+			if (exists == false) {
 				occupiedNums[j][i] = random;
 				playerLineup[j][i] = POSITIONS[random];
 			}
-
 		}
-
 	} //populates the rows after the name row
+}
 
-	return *playerLineup;
-};
-
-bool existsInColumn(int positionOccupiedArray[][NUMOFINNINGS], int columnNum, int randomNum) {
-	int row;
+bool existsInColumn(int positionOccupiedArray[][NUMOFCOLUMNS], int columnNum, int randomNum) {
 	int column = columnNum;
 	bool exists;
 
 	for (int row = 0; row < NUMOFPLAYERS; row++) {
 		if (positionOccupiedArray[row][columnNum] == randomNum) {
+			exists = true;
+		}
+		else {
+			exists = false;
+		}
+	}
+
+	return exists;
+}
+
+bool existsInRow(int positionOccupiedArray[][NUMOFCOLUMNS], int rowNum, int randomNum) {
+	int row = rowNum;
+	bool exists;
+
+	if (randomNum == 11 || randomNum == 10) {
+		randomNum = 10;
+	}
+
+	for (int column = 0; column < NUMOFCOLUMNS; column++) {
+		if (positionOccupiedArray[rowNum][column] == randomNum) {
 			exists = true;
 		}
 		else {
