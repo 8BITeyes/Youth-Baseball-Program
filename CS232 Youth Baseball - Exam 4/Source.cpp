@@ -31,9 +31,9 @@ const string POSITIONS[NUMOFPLAYERS + 1] = { "P", "C", "1B", "2B", "SS", "3B", "
 
 //Function declarations
 player* sortPlayers(player playersArray[], player sortedPlayerAverages[]);
-//string displayArray(string playersArray);
 string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNINGS + 1]);
 bool existsInColumn(int positionOccupiedArray[][NUMOFINNINGS], int rowNum, int randomNum);
+//string displayArray(string playersArray);
 
 int main() {
 	//declarations
@@ -64,33 +64,32 @@ int main() {
 	return 0;
 }
 
-player* sortPlayers(player playerAverageArray[], player sortedPlayers[]) {
-	int currentMaxAverageInIteration;
-	string currentNameInIteration;
+player* sortPlayers(player playerAverageArray[], player sortedPlayerAverages[]) {
+	int lastMaxNum = 1000;
 
 	for (int i = 0; i < NUMOFPLAYERS; i++) {
-		currentMaxAverageInIteration = playerAverageArray[i].average;
-		currentNameInIteration = playerAverageArray[i].name;
+		int currentMaxNum = 0;
+		string currentName = playerAverageArray[i].name;
 
-		for (int j = 1; j < NUMOFPLAYERS; j++) {
-			if (currentMaxAverageInIteration < playerAverageArray[j].average) {
-				currentMaxAverageInIteration = playerAverageArray[j].average;
-				sortedPlayers[i].average = playerAverageArray[j].average;
-				sortedPlayers[i].name = playerAverageArray[j].name;
-				playerAverageArray[j].average = currentMaxAverageInIteration;
+		for (int j = 0; j < NUMOFPLAYERS; j++) {
+			if (playerAverageArray[j].average > currentMaxNum && playerAverageArray[j].average < lastMaxNum) {
+				currentMaxNum = playerAverageArray[j].average;
+				currentName = playerAverageArray[j].name;
 			}
 		}
 
-		sortedPlayers[i].average = currentMaxAverageInIteration;
-		sortedPlayers[i].name = currentNameInIteration;
+		sortedPlayerAverages[i].average = currentMaxNum;
+		sortedPlayerAverages[i].name = currentName;
+		lastMaxNum = currentMaxNum;
 	}
 
-	return sortedPlayers;
+	return sortedPlayerAverages;
 }
+
 
 string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNINGS + 1]) {
 	srand((unsigned) time(NULL));
-	int column = 1;
+	int column = 0;
 	int row = 0;
 	int occupiedNums[NUMOFPLAYERS][NUMOFINNINGS];
 
@@ -99,9 +98,9 @@ string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNING
 	}// Inputs the players names in order into the first column of the lineup (2D array)
 
 
-	for (int i = row + 1; i < NUMOFPLAYERS; i++) {
+	for (int i = column + 1; i < NUMOFINNINGS + 1; i++) {
 
-		for (int j = column; j <= NUMOFPLAYERS; j++) {
+		for (int j = row; j < NUMOFPLAYERS; j++) {
 			bool exists;
 			int random = rand() % 12; //random number that will be generated between 0 and 12
 
@@ -112,8 +111,8 @@ string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNING
 				exists = existsInColumn(occupiedNums, j, random);
 			}
 			else {
-				occupiedNums[i][j] = random;
-				playerLineup[i][j] = POSITIONS[random];
+				occupiedNums[j][i] = random;
+				playerLineup[j][i] = POSITIONS[random];
 			}
 
 		}
@@ -122,13 +121,6 @@ string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNING
 
 	return *playerLineup;
 };
-
-/*string displayArray(string playersArray) {
-	cout << "Game lineup and field positions:" << endl;
-	cout << "________________________________" << endl;
-	cout << "Name \t Inning 1 \t Inning 2 \t Inning 3 \t Inning 4 \t Inning 5" << endl;
-
-} */
 
 bool existsInColumn(int positionOccupiedArray[][NUMOFINNINGS], int columnNum, int randomNum) {
 	int row;
@@ -146,3 +138,10 @@ bool existsInColumn(int positionOccupiedArray[][NUMOFINNINGS], int columnNum, in
 
 	return exists;
 }
+
+/*string displayArray(string playersArray) {
+	cout << "Game lineup and field positions:" << endl;
+	cout << "________________________________" << endl;
+	cout << "Name \t Inning 1 \t Inning 2 \t Inning 3 \t Inning 4 \t Inning 5" << endl;
+
+} */
