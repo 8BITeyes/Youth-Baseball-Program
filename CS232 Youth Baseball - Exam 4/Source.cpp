@@ -44,6 +44,7 @@ int main() {
 	sortPlayers(players, sortedPlayers);
 	sortLineup(sortedPlayers, playerLineup);
 
+	cout << playerLineup;
 
 	//displayArray(playerLineup);
 
@@ -85,17 +86,31 @@ void sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFCOLUMNS])
 
 
 	for (int i = column + 1; i < NUMOFCOLUMNS; i++) {
+		vector<int> numbersNeeded = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
 		for (int j = row; j < NUMOFPLAYERS; j++) {
 			bool exists = false;
-			int random = rand() % 12;
+			int sizeOfRemainingNumbers = numbersNeeded.size();
+			int random = numbersNeeded[rand() % sizeOfRemainingNumbers];
 
-			while (existsInColumn(occupiedNums, i, random) || existsInRow(occupiedNums, row, random))
+			while (existsInColumn(occupiedNums, i, random) || existsInRow(occupiedNums, j, random))
 			{
-				random = rand() % 12;
+				if (sizeOfRemainingNumbers == 1 && existsInRow(occupiedNums, j, random)) {
+					j = 0;
+					numbersNeeded = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+					sizeOfRemainingNumbers = numbersNeeded.size();
+
+					for (int q = 0; q < NUMOFPLAYERS - 1; q++) {
+						occupiedNums[q][i] = 100;
+					}
+				}
+
+				random = numbersNeeded[rand() % sizeOfRemainingNumbers];
 			}
 
 			if (exists == false) {
+				numbersNeeded.erase(std::remove(numbersNeeded.begin(), numbersNeeded.end(), random), numbersNeeded.end());
+
 				occupiedNums[j][i] = random;
 				playerLineup[j][i] = POSITIONS[random];
 			}
@@ -120,14 +135,15 @@ bool existsInColumn(int positionOccupiedArray[][NUMOFCOLUMNS], int columnNum, in
 bool existsInRow(int positionOccupiedArray[][NUMOFCOLUMNS], int rowNum, int randomNum) {
 	bool exists = false;
 
-	for (int column = 1; column < NUMOFCOLUMNS; column++) {
-		if (randomNum == 10 || randomNum == 11) {
+	if (randomNum == 10 || randomNum == 11) {
+		for (int column = 1; column < NUMOFCOLUMNS; column++) {
 			if (positionOccupiedArray[rowNum][column] == 10 || positionOccupiedArray[rowNum][column] == 11) {
-				exists = true;
+				return true;
 			}
-			break;
 		}
+	}
 
+	for (int column = 1; column < NUMOFCOLUMNS; column++) {
 		if (positionOccupiedArray[rowNum][column] == randomNum) {
 			exists = true;
 			break;
