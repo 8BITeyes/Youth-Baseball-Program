@@ -15,7 +15,6 @@ player may play a second inning of infield until every other player has played o
 
 #include <iostream>
 #include <string>
-#include <cstdio>
 #include <random>
 using namespace std;
 
@@ -32,7 +31,7 @@ const string POSITIONS[NUMOFPLAYERS + 1] = { "P", "C", "1B", "2B", "SS", "3B", "
 
 //Function declarations
 player* sortPlayers(player playersArray[], player sortedPlayerAverages[]);
-string displayArray(string playersArray);
+//string displayArray(string playersArray);
 string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNINGS + 1]);
 bool existsInColumn(int positionOccupiedArray[][NUMOFINNINGS], int rowNum, int randomNum);
 
@@ -89,9 +88,9 @@ player* sortPlayers(player playerAverageArray[], player sortedPlayers[]) {
 	return sortedPlayers;
 }
 
-string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNINGS]) {
+string* sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFINNINGS + 1]) {
 	srand((unsigned) time(NULL));
-	int column = 0;
+	int column = 1;
 	int row = 0;
 	int occupiedNums[NUMOFPLAYERS][NUMOFINNINGS];
 
