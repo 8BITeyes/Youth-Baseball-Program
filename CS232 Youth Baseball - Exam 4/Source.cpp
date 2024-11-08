@@ -88,13 +88,11 @@ void sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFCOLUMNS])
 
 		for (int j = row; j < NUMOFPLAYERS; j++) {
 			bool exists = false;
-			int random = rand() % 11; //random number that will be generated between 0 and 11
+			int random = rand() % 12;
 
-
-			while (existsInColumn(occupiedNums, j, random) == true || existsInRow(occupiedNums, i, random) == true)
+			while (existsInColumn(occupiedNums, i, random) || existsInRow(occupiedNums, row, random))
 			{
-				exists = true;
-				random = rand() % 11;
+				random = rand() % 12;
 			}
 
 			if (exists == false) {
@@ -103,18 +101,16 @@ void sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFCOLUMNS])
 			}
 		}
 	} //populates the rows after the name row
+
 }
 
 bool existsInColumn(int positionOccupiedArray[][NUMOFCOLUMNS], int columnNum, int randomNum) {
-	int column = columnNum;
-	bool exists;
+	bool exists = false;
 
 	for (int row = 0; row < NUMOFPLAYERS; row++) {
 		if (positionOccupiedArray[row][columnNum] == randomNum) {
 			exists = true;
-		}
-		else {
-			exists = false;
+			break;
 		}
 	}
 
@@ -122,19 +118,19 @@ bool existsInColumn(int positionOccupiedArray[][NUMOFCOLUMNS], int columnNum, in
 }
 
 bool existsInRow(int positionOccupiedArray[][NUMOFCOLUMNS], int rowNum, int randomNum) {
-	int row = rowNum;
-	bool exists;
+	bool exists = false;
 
-	if (randomNum == 11 || randomNum == 10) {
-		randomNum = 10;
-	}
+	for (int column = 1; column < NUMOFCOLUMNS; column++) {
+		if (randomNum == 10 || randomNum == 11) {
+			if (positionOccupiedArray[rowNum][column] == 10 || positionOccupiedArray[rowNum][column] == 11) {
+				exists = true;
+			}
+			break;
+		}
 
-	for (int column = 0; column < NUMOFCOLUMNS; column++) {
 		if (positionOccupiedArray[rowNum][column] == randomNum) {
 			exists = true;
-		}
-		else {
-			exists = false;
+			break;
 		}
 	}
 
