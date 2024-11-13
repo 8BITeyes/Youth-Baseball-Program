@@ -19,7 +19,7 @@ player* sortPlayers(player playersArray[], player sortedPlayerAverages[]);
 void sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFCOLUMNS]);
 bool existsInColumn(int positionOccupiedArray[][NUMOFCOLUMNS], int rowNum, int randomNum);
 bool existsInRow(int positionOccupiedArray[][NUMOFCOLUMNS], int columnNum, int randomNum);
-//string displayArray(string playersArray);
+void displayArray(string playersArray[][NUMOFCOLUMNS]);
 
 int main() {
 	//declarations
@@ -40,13 +40,10 @@ int main() {
 		cin >> players[i].average;
 	} // Inputs the players' averages into an array playerAverages
 
-
+	//calculations and output
 	sortPlayers(players, sortedPlayers);
 	sortLineup(sortedPlayers, playerLineup);
-
-	cout << playerLineup;
-
-	//displayArray(playerLineup);
+	displayArray(playerLineup);
 
 	return 0;
 }
@@ -93,9 +90,9 @@ void sortLineup(player sortedPlayerArray[], string playerLineup[][NUMOFCOLUMNS])
 			int sizeOfRemainingNumbers = numbersNeeded.size();
 			int random = numbersNeeded[rand() % sizeOfRemainingNumbers];
 
-			while (existsInColumn(occupiedNums, i, random) || existsInRow(occupiedNums, j, random))
+ 			while (existsInColumn(occupiedNums, i, random) || existsInRow(occupiedNums, j, random))
 			{
-				if (sizeOfRemainingNumbers == 1 && existsInRow(occupiedNums, j, random)) {
+				if ((sizeOfRemainingNumbers == 1 || sizeOfRemainingNumbers == 2 || sizeOfRemainingNumbers == 3) && existsInRow(occupiedNums, j, random)) {
 					j = 0;
 					numbersNeeded = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 					sizeOfRemainingNumbers = numbersNeeded.size();
@@ -153,9 +150,16 @@ bool existsInRow(int positionOccupiedArray[][NUMOFCOLUMNS], int rowNum, int rand
 	return exists;
 }
 
-/*string displayArray(string playersArray) {
-	cout << "Game lineup and field positions:" << endl;
+void displayArray(string playersArray[][NUMOFCOLUMNS]) {
+	cout << "\nGame lineup and field positions:" << endl;
 	cout << "________________________________" << endl;
-	cout << "Name \t Inning 1 \t Inning 2 \t Inning 3 \t Inning 4 \t Inning 5" << endl;
+	cout << "Name \t\tInning 1 \tInning 2 \tInning 3 \tInning 4 \tInning 5" << endl;
 
-} */
+	for (int i = 0; i < NUMOFPLAYERS; i++) {
+		for (int j = 0; j < NUMOFCOLUMNS; j++) {
+			cout << playersArray[i][j] << "\t \t";
+		}
+		cout << endl;
+	}
+
+};
